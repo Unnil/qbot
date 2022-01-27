@@ -1,7 +1,7 @@
 {
   "clip": {
     "description": "播放本地音乐",
-    "usagesReply": "用法: /clip <名称>",
+    "usagesReply": "用法: {prefix}clip <名称>",
     "errorQueue": "无法播放本地音乐，因为目前已经有有效的音乐队列",
     "errorNotChannel": "你必须先加入语音频道!"
   },
@@ -29,7 +29,7 @@
   },
   "move": {
     "description": "移动歌曲到队列的其他位置",
-    "errorNotQueue": "There is no queue.",
+    "errorNotQueue": "没有队列",
     "usagesReply": "用法: {prefix}move <歌曲队列编号>",
     "result": "<@{author}> 🚚 从音乐队列中移动 **{title}** 至 {index}"
   },
@@ -72,7 +72,7 @@
     "stopSong": "<@{author}> ⏹ 停止了歌曲!",
     "leaveChannel": "正在离开语音频道...",
     "songNotFound": "没有找到曲目",
-    "songAccessErr": "Video is age restricted, private or unavailable"
+    "songAccessErr": "视频有年龄限制、私人或不可用"
   },
   "playlist": {
     "description": "播放 YouTube 的播放清单",

@@ -1,7 +1,7 @@
 {
   "clip": {
     "description": "クリップ音声の再生",
-    "usagesReply": "使い方: /clip <名>",
+    "usagesReply": "使い方: {prefix}clip <名>",
     "errorQueue": "キューが残っているためクリップ音声を再生出来ません",
     "errorNotChannel": "先にボイスチャンネルに参加してください！"
   },
@@ -72,7 +72,7 @@
     "stopSong": "<@{author}> が ⏹ 停止しました！",
     "leaveChannel": "ボイスチャンネルを退出します",
     "songNotFound": "音声が見つかりません",
-    "songAccessErr": "Video is age restricted, private or unavailable"
+    "songAccessErr": "動画は年齢制限あり、非公開、または利用できません"
   },
   "playlist": {
     "description": "YouTube プレイリストから再生",

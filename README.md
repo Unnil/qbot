@@ -74,3 +74,47 @@ Examples: `1` or `1,2,3`
 * Media Controls via Reactions
 
 ![reactions](https://i.imgur.com/9S7Omf9.png)
+
+## 🌎 Locales
+
+Currently available locales are:
+- English (en)
+- Arabic (ar)
+- Brazilian Portuguese (pt_br)
+- Dutch (nl)
+- French (fr)
+- German (de)
+- Greek (el)
+- Indonesian (id)
+- Italian (it)
+- Japanese (ja)
+- Korean (ko)
+- Minionese (mi)
+- Persian (fa)
+- Polish (pl)
+- Russian (ru)
+- Simplified Chinese (zh_cn)
+- Singaporean Mandarin (zh_sg)
+- Spanish (es)
+- Swedish (sv)
+- Traditional Chinese (zh_tw)
+- Thai (th)
+- Turkish (tr)
+- Ukrainian (uk)
+- Vietnamese (vi)
+- Check [Contributing](#-contributing) if you wish to help add more languages!
+- For languages please use [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) two letter format
+
+## 🤝 Contributing
+
+1. [Fork the repository](https://github.com/eritislami/evobot/fork)
+2. Clone your fork: `git clone https://github.com/your-username/evobot.git`
+3. Create your feature branch: `git checkout -b my-new-feature`
+4. Stage changes `git add .`
+5. Commit your changes: `cz` OR `npm run commit` do not use `git commit`
+6. Push to the branch: `git push origin my-new-feature`
+7. Submit a pull request
+
+## 📝 Credits
+
+[@iCrawl](https://github.com/iCrawl) For the queue system used in this application which was adapted from [@iCrawl/discord-music-bot](https://github.com/iCrawl/discord-music-bot)
