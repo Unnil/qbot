@@ -49,6 +49,11 @@
     "description": "Muestra la latencia media del bot (ping)",
     "result": "📈 Latencia media a la API: {ping} ms"
   },
+  "roll": {
+    "description": "Tira un dado de (min a max)",
+    "result": "🎲 El resultado es: {roll}",
+    "errorInNumbers": "Los parametros ingresados no son numeros"
+  },
   "play": {
     "description": "Reproduciendo música de Youtube o Soundcloud",
     "errorNotChannel": "¡Primero debes unirte a un canal de voz!",
