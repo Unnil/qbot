@@ -17,12 +17,12 @@ module.exports = {
 
     let song = queue.songs[args[0] - 1];
 
-    queue.songs = move(queue.songs, args[0] - 1, args[1] == 1 ? 1 : args[1] - 1);
+    queue.songs = move(queue.songs, args[0] - 1, args[1] <= 2 || isNaN(args[1])? 1 : args[1] - 1);
     queue.textChannel.send(
       i18n.__mf("move.result", {
         author: message.author,
         title: song.title,
-        index: args[1] == 1 ? 1 : args[1]
+        index: args[1] <= 2 || isNaN(args[1])? 2 : args[1]
       })
     );
   }
