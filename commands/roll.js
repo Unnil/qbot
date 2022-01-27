@@ -2,7 +2,7 @@ const i18n = require("../util/i18n");
 
 module.exports = {
   name: "roll",
-  cooldown: 10,
+  cooldown: 2,
   description: i18n.__("roll.description"),
   execute(message, args) {
 
