@@ -75,19 +75,20 @@ module.exports = {
       try {
         waitMessage = await message.channel.send('fetching playlist...')
         let playlistTrack = await getTracks(url);
-        if (playlistTrack > MAX_PLAYLIST_SIZE) {
-          playlistTrack.length = MAX_PLAYLIST_SIZE
+        if (playlistTrack.length > MAX_PLAYLIST_SIZE) {
+          playlistTrack = playlistTrack.slice(0, MAX_PLAYLIST_SIZE)
         }
-        const spotfiyPl = await Promise.all(playlistTrack.map(async (track) => {
-          let result;
-          const ytsrResult = await YouTube.searchOne((`${track.name} - ${track.artists ? track.artists[0].name : ''}`));
-          result = ytsrResult
 
+        const spotfiyPl = await Promise.all(playlistTrack.map(async (track) => {
+
+          const result = await YouTube.searchOne((`${track.name} - ${track.artists ? track.artists[0].name : ''}`));
+
+          console.log("RESULTADO BUSQUEDA", result)
           return (song = {
             title: result.title,
-            url: result.url,
+            id: result.id,
             duration: result.duration,
-            thumbnail: result.thumbnails ? result.thumbnails[0].url : undefined
+            thumbnail: result.thumbnail ? result.thumbnail.url : undefined
           });
         }));
         const result = await Promise.all(spotfiyPl.filter((song) => song.title != undefined || song.duration != undefined));
@@ -111,6 +112,7 @@ module.exports = {
     const newSongs = videos.videos
       .filter((Video) => Video.title != "Private video" && Video.title != "Deleted video")
       .map((video) => {
+        console.log("VIDEO A HACER PLAY", video);
         return (song = {
           title: video.title,
           url: `https://www.youtube.com/watch?v=${video.id}`,
@@ -129,7 +131,7 @@ module.exports = {
 
     if (playlistEmbed.description.length >= 2048)
       playlistEmbed.description =
-        playlistEmbed.description.substr(0, 2007) + i18n.__("playlist.playlistCharLimit");
+        playlistEmbed.description.substring(0, 2007) + i18n.__("playlist.playlistCharLimit");
 
     waitMessage ? waitMessage.delete() : null
     message.channel.send(i18n.__mf("playlist.startedPlaylist", { author: message.author }), playlistEmbed);
