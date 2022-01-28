@@ -4,9 +4,6 @@ const { readdirSync } = require("fs");
 const { join } = require("path");
 
 exports.generateBot = (token) => {
-
-  console.log(__dirname)
-
   const client = new Client({
     disableMentions: "everyone",
     restTimeOffset: 0
@@ -14,6 +11,7 @@ exports.generateBot = (token) => {
   
   client.login(token);
   client.commands = new Collection();  
+  client.prefix = PREFIX;
   client.queue = new Map();
 
   /**
@@ -25,7 +23,6 @@ exports.generateBot = (token) => {
   });
   client.on("warn", (info) => console.log(info));
   client.on("error", console.error);
-
   
 
   /**
@@ -38,5 +35,4 @@ exports.generateBot = (token) => {
   }
 
   return client;
-
 }
