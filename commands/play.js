@@ -5,13 +5,8 @@ const YouTube = require("youtube-sr").default;
 const scdl = require("soundcloud-downloader").default;
 const https = require("https");
 const spotifyURI = require('spotify-uri');
-const Spotify = require('node-spotify-api');
+const {Spotify} = require('../util/Util');
 const { SOUNDCLOUD_CLIENT_ID, DEFAULT_VOLUME, SPOTIFY_CLIENT_ID, SPOTIFY_SECRET_ID } = require("../util/Util");
-
-const spotify = new Spotify({
-  id: SPOTIFY_CLIENT_ID,
-  secret: SPOTIFY_SECRET_ID
-});
 
 module.exports = {
   name: "play",
@@ -112,32 +107,22 @@ module.exports = {
         console.error(error);
         return message.reply(error.message).catch(console.error);
       }
-    } else if (spotifyValid) {
-
-      let spotifyTitle, spotifyArtist;
-      const spotifyTrackID = spotifyURI.parse(url).id
-      const spotifyInfo = await spotify.request(`https://api.spotify.com/v1/tracks/${spotifyTrackID}`).catch(err => {
-        return message.channel.send(`Oops... \n` + err)
-      })
-      spotifyTitle = spotifyInfo.name
-      spotifyArtist = spotifyInfo.artists[0].name
-
-      try {
-        const final = await youtube.searchVideos(`${spotifyTitle} - ${spotifyArtist}`, 1, { part: 'snippet' });
-        songInfo = await ytdl.getInfo(final[0].url)
-        song = {
-          title: songInfo.videoDetails.title,
-          url: songInfo.videoDetails.video_url,
-          duration: songInfo.videoDetails.lengthSeconds
-        }
-      } catch (err) {
-        console.log(err)
-        return message.channel.send(`Oops.. There was an error! \n ` + err)
-      }
-
     } else {
       try {
-        const results = await YouTube.search(search, { limit: 1 })
+        if(spotifyValid)
+        {
+          let spotifyTitle, spotifyArtist;
+          const spotifyTrackID = spotifyURI.parse(url).id
+          const spotifyInfo = await Spotify.request(`https://api.spotify.com/v1/tracks/${spotifyTrackID}`).catch(err => {
+            return message.channel.send(`Oops... \n` + err)
+          })
+          spotifyTitle = spotifyInfo.name
+          spotifyArtist = spotifyInfo.artists[0].name
+
+          search = `${spotifyTitle} - ${spotifyArtist}`
+        }
+
+        const results = await YouTube.search(search, { limit: 1 }, { part: 'snippet' })
 
         if (!results.length) {
           message.reply(i18n.__("play.songNotFound")).catch(console.error);

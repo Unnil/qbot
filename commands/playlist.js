@@ -3,7 +3,7 @@ const { MessageEmbed } = require("discord.js");
 const { play } = require("../include/play");
 const YouTube = require("youtube-sr").default;
 const scdl = require("soundcloud-downloader").default;
-const ytsr = require('ytsr');
+const {Spotify} = require('../util/Util');
 const { getTracks } = require('spotify-url-info');
 const { SOUNDCLOUD_CLIENT_ID, MAX_PLAYLIST_SIZE, DEFAULT_VOLUME } = require("../util/Util");
 
@@ -49,7 +49,6 @@ module.exports = {
       playing: true
     };
 
-    let newSongs = null;
     let waitMessage = null;
     let playlist = null;
     let videos = [];
@@ -81,17 +80,19 @@ module.exports = {
         }
         const spotfiyPl = await Promise.all(playlistTrack.map(async (track) => {
           let result;
-          const ytsrResult = await ytsr((`${track.name} - ${track.artists ? track.artists[0].name : ''}`), { limit: 1 });
-          result = ytsrResult.items[0];
+          const ytsrResult = await YouTube.searchOne((`${track.name} - ${track.artists ? track.artists[0].name : ''}`));
+          result = ytsrResult
+
           return (song = {
             title: result.title,
             url: result.url,
-            duration: result.duration ? this.convert(result.duration) : undefined,
+            duration: result.duration,
             thumbnail: result.thumbnails ? result.thumbnails[0].url : undefined
           });
         }));
         const result = await Promise.all(spotfiyPl.filter((song) => song.title != undefined || song.duration != undefined));
-        videos = result;
+        videos.videos = result;
+
       } catch (err) {
         console.log(err);
         return message.channel.send(err ? err.message : 'There was an error!');
