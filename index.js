@@ -1,48 +1,26 @@
-/**
- * Module Imports
- */
-const { Client, Collection } = require("discord.js");
-const { readdirSync } = require("fs");
-const { join } = require("path");
-const { TOKEN, PREFIX } = require("./util/Util");
+const { Collection } = require("discord.js");
+const { TOKENS, PREFIX, findFreeBot } = require("./util/Util");
+const { generateBot } = require("./util/bot-builder");
 const i18n = require("./util/i18n");
 
-const client = new Client({
-  disableMentions: "everyone",
-  restTimeOffset: 0
-});
+const clients = [];
+const botsInUsage = [];
 
-client.login(TOKEN);
-client.commands = new Collection();
-client.prefix = PREFIX;
-client.queue = new Map();
+for (let i = 0; i < TOKENS.length; i++) {
+  clients.push(generateBot(TOKENS[i]));
+}
+
+const orchestrator = clients[0]
+orchestrator.prefix = PREFIX;
+
 const cooldowns = new Collection();
 const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-/**
- * Client Events
- */
-client.on("ready", () => {
-  console.log(`${client.user.username} ready!`);
-  client.user.setActivity(`${PREFIX}help and ${PREFIX}play`, { type: "LISTENING" });
-});
-client.on("warn", (info) => console.log(info));
-client.on("error", console.error);
-
-/**
- * Import all commands
- */
-const commandFiles = readdirSync(join(__dirname, "commands")).filter((file) => file.endsWith(".js"));
-for (const file of commandFiles) {
-  const command = require(join(__dirname, "commands", `${file}`));
-  client.commands.set(command.name, command);
-}
-
-client.on("message", async (message) => {
+orchestrator.on("message", async (message) => {
   if (message.author.bot) return;
   if (!message.guild) return;
 
-  const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${escapeRegex(PREFIX)})\\s*`);
+  const prefixRegex = new RegExp(`^(<@!?${orchestrator.user.id}>|${escapeRegex(PREFIX)})\\s*`);
   if (!prefixRegex.test(message.content)) return;
 
   const [, matchedPrefix] = message.content.match(prefixRegex);
@@ -50,9 +28,13 @@ client.on("message", async (message) => {
   const args = message.content.slice(matchedPrefix.length).trim().split(/ +/);
   const commandName = args.shift().toLowerCase();
 
+  const freeBot = findFreeBot(clients, message)
+  if(!freeBot)
+    return message.reply(i18n.__("play.errorNotInSameChannel")).catch(console.error)
+
   const command =
-    client.commands.get(commandName) ||
-    client.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
+    freeBot.commands.get(commandName) ||
+    freeBot.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
 
   if (!command) return;
 
