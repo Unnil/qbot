@@ -32,9 +32,7 @@ orchestrator.on("message", async (message) => {
   if(!freeBot)
     return message.reply(i18n.__("play.errorNotInSameChannel")).catch(console.error)
 
-  const command =
-    freeBot.commands.get(commandName) ||
-    freeBot.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
+  const command = freeBot.commands.get(commandName) || freeBot.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
 
   if (!command) return;
 

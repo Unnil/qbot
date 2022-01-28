@@ -20,19 +20,25 @@ exports.LOCALE = (config ? config.LOCALE : process.env.LOCALE) || "en";
 
 exports.findFreeBot = (clients, message) => {
 
+  let freeBot = undefined
+
   for (let i = 0; i < clients.length; i++) {
-    // const element = clients[0];    
     const { channel } = message.member.voice;
     const serverQueue = message.client.queue.get(message.guild.id);
 
-    console.log('channel is:', channel);
-    console.log('message channel is:', message.guild.me.voice.channel);
+    console.log('id is:', clients[i].user.id)
+    const isInUse = clients[i].voice.connections.toJSON().length !== 0;
 
-    // the bot is free or I'm in the channel with the bot
-    if(channel && (serverQueue || channel === message.guild.me.voice.channel))
-      return clients[i];
+    //TODO: The bot is active in my channel
+    if(channel && channel === message.guild.me.voice.channel)
+      return clients[i];   
+    
+    //TODO: The bot is not active in my channel and is not active in any channel
+    if(channel && channel !== message.guild.me.voice.channel && !isInUse)
+      freeBot = clients[i];    
   }
 
-  return undefined;
+  console.log('Channel free is', freeBot.user.id)
+  return freeBot;
 
 }
