@@ -32,6 +32,15 @@ orchestrator.on("message", async (message) => {
   if(!freeBot)
     return message.reply(i18n.__("play.errorNotInSameChannel")).catch(console.error)
 
+  const proxyMessage = {
+    client: freeBot,
+    channel: message.channel,
+    member: message.member,
+    guild: message.guild,
+    author: message.author,
+    reply: message.reply
+  }
+
   const command = freeBot.commands.get(commandName) || freeBot.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
 
   if (!command) return;
@@ -44,24 +53,24 @@ orchestrator.on("message", async (message) => {
   const timestamps = cooldowns.get(command.name);
   const cooldownAmount = (command.cooldown || 1) * 1000;
 
-  if (timestamps.has(message.author.id)) {
-    const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+  if (timestamps.has(proxyMessage.author.id)) {
+    const expirationTime = timestamps.get(proxyMessage.author.id) + cooldownAmount;
 
     if (now < expirationTime) {
       const timeLeft = (expirationTime - now) / 1000;
-      return message.reply(
+      return proxyMessage.reply(
         i18n.__mf("common.cooldownMessage", { time: timeLeft.toFixed(1), name: command.name })
       );
     }
   }
 
-  timestamps.set(message.author.id, now);
-  setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+  timestamps.set(proxyMessage.author.id, now);
+  setTimeout(() => timestamps.delete(proxyMessage.author.id), cooldownAmount);
 
   try {
-    command.execute(message, args);
+    command.execute(proxyMessage, args);
   } catch (error) {
     console.error(error);
-    message.reply(i18n.__("common.errorCommand")).catch(console.error);
+    proxyMessage.reply(i18n.__("common.errorCommand")).catch(console.error);
   }
 });

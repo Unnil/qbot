@@ -16,7 +16,6 @@ module.exports = {
     }
 
     const PRUNING = config ? config.PRUNING : process.env.PRUNING;
-
     const queue = message.client.queue.get(message.guild.id);
 
     if (!song) {
