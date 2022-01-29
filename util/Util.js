@@ -9,6 +9,7 @@ try {
 }
 
 exports.TOKENS = config ? config.TOKENS : process.env.TOKENS;
+exports.REDIS_URL = config ? config.REDIS_URL : process.env.REDIS_URL;
 exports.SOUNDCLOUD_CLIENT_ID = config ? config.SOUNDCLOUD_CLIENT_ID : process.env.SOUNDCLOUD_CLIENT_ID;
 exports.PREFIX = (config ? config.PREFIX : process.env.PREFIX) || "/";
 exports.MAX_PLAYLIST_SIZE = (config ? config.MAX_PLAYLIST_SIZE : parseInt(process.env.MAX_PLAYLIST_SIZE)) || 10;
