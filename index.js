@@ -21,16 +21,18 @@ const AsyncLock = require('async-lock');
   const cooldowns = new Collection();
   const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
+  const getCommandArguments = (client, message) => {
+    const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${escapeRegex(PREFIX)})\\s*`);
+    if (!prefixRegex.test(message.content)) return;
+    const [, matchedPrefix] = message.content.match(prefixRegex);
+    return message.content.slice(matchedPrefix.length).trim().split(/ +/);
+  }
+
   const processMessage = (client, message) => {
       if (message.author.bot) return;
       if (!message.guild) return;
     
-      const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${escapeRegex(PREFIX)})\\s*`);
-      if (!prefixRegex.test(message.content)) return;
-    
-      const [, matchedPrefix] = message.content.match(prefixRegex);
-    
-      const args = message.content.slice(matchedPrefix.length).trim().split(/ +/);
+      const args = getCommandArguments(client, message);
       const commandName = args.shift().toLowerCase();
     
       const command = client.commands.get(commandName) || client.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
@@ -91,6 +93,15 @@ const AsyncLock = require('async-lock');
     return true;
   }
 
+  const BotsAreFull = () => {
+    let counter = 0;
+    for (let i = 0; i < clients.length; i++) {
+      if(clients[i].voice.connections.toJSON().length > 0)
+        counter++;
+    }
+    return counter === clients.length;
+  }
+
   for (let i = 0; i < TOKENS.length; i++) {
     const client = generateBot(TOKENS[i])
     clients.push(client);
@@ -104,6 +115,13 @@ const AsyncLock = require('async-lock');
           return;
 
         const channelId = myChannel.id
+
+        const commandArguments = getCommandArguments(client, message)
+        if(commandArguments){
+          const commandName = commandArguments.shift().toLowerCase();
+          if(commandName === "play" && BotsAreFull() && i === 0)
+            return message.reply(i18n.__("common.unavailableBots")).catch(console.error); 
+        }
 
         if(!CanAttendMessages(client.user.id, channelId))
           return;
