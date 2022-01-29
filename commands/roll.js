@@ -1,4 +1,5 @@
 const i18n = require("../util/i18n");
+const d20 = require('d20');
 
 module.exports = {
   name: "roll",
@@ -6,23 +7,21 @@ module.exports = {
   description: i18n.__("roll.description"),
   execute(message, args) {
 
-  let min = 1;
-	let max = 6;
-  if (args.length === 1) {
-    max = args[0];
-  } else if (args.length > 1) {
-    min = +args[0];
-    max = +args[1];
-  }
+  let command = '';
+  args.forEach(argument => {
+    command = command + " " + argument;
+  });
 
-	if (!isFinite(min) || !isFinite(max)) {
-    return message.channel.send(i18n.__mf("roll.errorInNumbers", { error: error })).catch(console.error);
-	}
-	if (min > max) [min, max] = [max, min];
-	const randNum = Math.floor(Math.random() * (max - min + 1)) + min;
+  let result = d20.verboseRoll(command);
 
+  let sum = 0;
+  result.forEach(roll => {
+    sum += roll;
+  });
+
+  result = sum + " ["+ result +"]"
   message
-      .reply(i18n.__mf("roll.result", { roll: randNum }))
+      .reply(i18n.__mf("roll.result", { roll: result }))
       .catch(console.error);
   }
 };
