@@ -10,14 +10,12 @@ const AsyncLock = require('async-lock');
   const redisClient = createClient({ url: REDIS_URL });
   redisClient.on('error', (err) => console.log('Redis Client Error', err));
   await redisClient.connect();
-  
   console.log('Redis started')
 
   const lock = new AsyncLock();
   const clients = [];
   const botsInUsage = [];
 
-  // TODO: cooldown should be different by each bot
   const cooldowns = new Collection();
   const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -69,22 +67,21 @@ const AsyncLock = require('async-lock');
       }
   }
 
-  const CanAttendMessages = (actualClientId, channelId) => {
+  const CanBotAttendMessages = (actualClientId, channelId) => {
     
     for (let i = 0; i < clients.length; i++) {
       const c = clients[i];    
 
       if(c.voice.connections.toJSON().length > 0){
-
-        //I'm the user and I'm connected to the user channel
+        //I'm the client and I'm connected to the user channel
         if(c.user.id == actualClientId && channelId == c.voice.connections.toJSON()[0].channel)
           return true;
 
-        //I'm the user but I'm connected in another channel
+        //I'm the client but I'm connected in another channel
         if(c.user.id == actualClientId && channelId != c.voice.connections.toJSON()[0].channel)
           return false;
 
-        //I'm not the user and I'm connected to the user channel
+        //I'm not the client and I'm connected to the user channel
         if(channelId == c.voice.connections.toJSON()[0].channel)
           return false;
       }
@@ -93,10 +90,12 @@ const AsyncLock = require('async-lock');
     return true;
   }
 
-  const BotsAreFull = () => {
+  // The bots are in use in other channels different than user's channel
+  const AllBotsAreWorking = (channelId) => {
     let counter = 0;
     for (let i = 0; i < clients.length; i++) {
-      if(clients[i].voice.connections.toJSON().length > 0)
+      const connections = clients[i].voice.connections.toJSON();
+      if(connections.length > 0 && connections[0].channel !== channelId)
         counter++;
     }
     return counter === clients.length;
@@ -108,25 +107,26 @@ const AsyncLock = require('async-lock');
 
     client.on("message", async (message) => {
 
+      // locking the same message between the different bots to decide who will attend it
       lock.acquire(message.id, async () => {
         
-        const myChannel = message.member.voice.channel;
-        if(!myChannel)
+        const userChannel = message.member.voice.channel;
+        if(!userChannel)
           return;
 
-        const channelId = myChannel.id
-
-        if(!CanAttendMessages(client.user.id, channelId)){
-          //TODO: asegurarse que no estes en un cannal con un bot
+        if(!CanBotAttendMessages(client.user.id, userChannel.id)){
           const commandArguments = getCommandArguments(client, message)
           if(commandArguments){
             const commandName = commandArguments.shift().toLowerCase();
-            if(commandName === "play" && BotsAreFull() && i === 0)
+            
+            // when each bot is working in another channel we need to notify the user
+            if(commandName === "play" && i === 0 && AllBotsAreWorking(userChannel.id))
               return message.reply(i18n.__("common.unavailableBots")).catch(console.error); 
           }
           return;
         }
 
+        // many bots are available to attend the message but just the first one would be in charge
         const owner = await redisClient.get(message.id);
         if(owner)
           return;
