@@ -99,9 +99,13 @@ const AsyncLock = require('async-lock');
 
       lock.acquire(message.id, async () => {
         
-        const myChannel = message.member.voice.channel.id;
+        const myChannel = message.member.voice.channel;
+        if(!myChannel)
+          return;
 
-        if(!CanAttendMessages(client.user.id, myChannel))
+        const channelId = myChannel.id
+
+        if(!CanAttendMessages(client.user.id, channelId))
           return;
 
         const owner = await redisClient.get(message.id);
