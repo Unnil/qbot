@@ -82,8 +82,6 @@ module.exports = {
         const spotfiyPl = await Promise.all(playlistTrack.map(async (track) => {
 
           const result = await YouTube.searchOne((`${track.name} - ${track.artists ? track.artists[0].name : ''}`));
-
-          console.log("RESULTADO BUSQUEDA", result)
           return (song = {
             title: result.title,
             id: result.id,
@@ -112,7 +110,6 @@ module.exports = {
     const newSongs = videos.videos
       .filter((Video) => Video.title != "Private video" && Video.title != "Deleted video")
       .map((video) => {
-        console.log("VIDEO A HACER PLAY", video);
         return (song = {
           title: video.title,
           url: `https://www.youtube.com/watch?v=${video.id}`,
