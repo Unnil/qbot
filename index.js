@@ -1,6 +1,6 @@
 const { Collection } = require("discord.js");
 const { createClient } = require("redis");
-const { TOKENS, PREFIX, REDIS_URL, findFreeBot } = require("./util/Util");
+const { TOKENS, PREFIX, REDIS_URL } = require("./util/Util");
 const { generateBot } = require("./util/bot-builder");
 const i18n = require("./util/i18n");
 const AsyncLock = require('async-lock');
