@@ -3,6 +3,8 @@ const { MessageEmbed } = require("discord.js");
 const { play } = require("../include/play");
 const YouTube = require("youtube-sr").default;
 const scdl = require("soundcloud-downloader").default;
+const {Spotify} = require('../util/Util');
+const { getTracks } = require('spotify-url-info');
 const { SOUNDCLOUD_CLIENT_ID, MAX_PLAYLIST_SIZE, DEFAULT_VOLUME } = require("../util/Util");
 
 module.exports = {
@@ -31,6 +33,8 @@ module.exports = {
 
     const search = args.join(" ");
     const pattern = /^.*(youtu.be\/|list=)([^#\&\?]*).*/gi;
+    const spotifyPlaylistPattern = /^.*(https:\/\/open\.spotify\.com\/playlist)([^#\&\?]*).*/gi;
+    const spotifyPlaylistValid = spotifyPlaylistPattern.test(args[0]);
     const url = args[0];
     const urlValid = pattern.test(args[0]);
 
@@ -45,6 +49,7 @@ module.exports = {
       playing: true
     };
 
+    let waitMessage = null;
     let playlist = null;
     let videos = [];
 
@@ -65,6 +70,31 @@ module.exports = {
           url: track.permalink_url,
           duration: track.duration / 1000
         }));
+      }
+    } else if (spotifyPlaylistValid){
+      try {
+        waitMessage = await message.channel.send('fetching playlist...')
+        let playlistTrack = await getTracks(url);
+        if (playlistTrack.length > MAX_PLAYLIST_SIZE) {
+          playlistTrack = playlistTrack.slice(0, MAX_PLAYLIST_SIZE)
+        }
+
+        const spotfiyPl = await Promise.all(playlistTrack.map(async (track) => {
+
+          const result = await YouTube.searchOne((`${track.name} - ${track.artists ? track.artists[0].name : ''}`));
+          return (song = {
+            title: result.title,
+            id: result.id,
+            duration: result.duration,
+            thumbnail: result.thumbnail ? result.thumbnail.url : undefined
+          });
+        }));
+        const result = await Promise.all(spotfiyPl.filter((song) => song.title != undefined || song.duration != undefined));
+        videos.videos = result;
+
+      } catch (err) {
+        console.log(err);
+        return message.channel.send(err ? err.message : 'There was an error!');
       }
     } else {
       try {
@@ -90,16 +120,17 @@ module.exports = {
     serverQueue ? serverQueue.songs.push(...newSongs) : queueConstruct.songs.push(...newSongs);
 
     let playlistEmbed = new MessageEmbed()
-      .setTitle(`${playlist.title}`)
+      .setTitle(`${playlist ? playlist.title : 'Spotify Playlist'}`)
       .setDescription(newSongs.map((song, index) => `${index + 1}. ${song.title}`))
-      .setURL(playlist.url)
+      .setURL(playlist ? playlist.url : 'https://www.spotify.com/')
       .setColor("#F8AA2A")
       .setTimestamp();
 
     if (playlistEmbed.description.length >= 2048)
       playlistEmbed.description =
-        playlistEmbed.description.substr(0, 2007) + i18n.__("playlist.playlistCharLimit");
+        playlistEmbed.description.substring(0, 2007) + i18n.__("playlist.playlistCharLimit");
 
+    waitMessage ? waitMessage.delete() : null
     message.channel.send(i18n.__mf("playlist.startedPlaylist", { author: message.author }), playlistEmbed);
 
     if (!serverQueue) {

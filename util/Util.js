@@ -17,3 +17,15 @@ exports.PRUNING = (config ? config.PRUNING : (process.env.PRUNING === 'true' ? t
 exports.STAY_TIME = (config ? config.STAY_TIME : parseInt(process.env.STAY_TIME)) || 30;
 exports.DEFAULT_VOLUME = (config ? config.DEFAULT_VOLUME : parseInt(process.env.DEFAULT_VOLUME)) || 100;
 exports.LOCALE = (config ? config.LOCALE : process.env.LOCALE) || "en";
+
+
+/**
+ * Spotify
+ */
+const Spotify = require('node-spotify-api');
+SPOTIFY_CLIENT_ID = config ? config.SPOTIFY_CLIENT_ID : process.env.SPOTIFY_CLIENT_ID;
+SPOTIFY_SECRET_ID = config ? config.SPOTIFY_SECRET_ID : process.env.SPOTIFY_SECRET_ID;
+ exports.Spotify = new Spotify({
+  id: SPOTIFY_CLIENT_ID,
+  secret: SPOTIFY_SECRET_ID
+});

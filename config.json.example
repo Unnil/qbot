@@ -1,6 +1,8 @@
 {
   "TOKENS": [""],
   "SOUNDCLOUD_CLIENT_ID": "",
+  "SPOTIFY_CLIENT_ID": "",
+  "SPOTIFY_SECRET_ID": "",
   "MAX_PLAYLIST_SIZE": 10,
   "PREFIX": "/",
   "PRUNING": false,
