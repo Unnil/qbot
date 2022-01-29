@@ -25,7 +25,7 @@ exports.LOCALE = (config ? config.LOCALE : process.env.LOCALE) || "en";
 const Spotify = require('node-spotify-api');
 SPOTIFY_CLIENT_ID = config ? config.SPOTIFY_CLIENT_ID : process.env.SPOTIFY_CLIENT_ID;
 SPOTIFY_SECRET_ID = config ? config.SPOTIFY_SECRET_ID : process.env.SPOTIFY_SECRET_ID;
- exports.Spotify = new Spotify({
+exports.Spotify = new Spotify({
   id: SPOTIFY_CLIENT_ID,
   secret: SPOTIFY_SECRET_ID
 });
