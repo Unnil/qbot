@@ -73,15 +73,15 @@ const AsyncLock = require('async-lock');
       const c = clients[i];    
 
       if(c.voice.connections.toJSON().length > 0){
-        //I'm the client and I'm connected to the user channel
+        // I'm the client and I'm connected to the user channel
         if(c.user.id == actualClientId && channelId == c.voice.connections.toJSON()[0].channel)
           return true;
 
-        //I'm the client but I'm connected in another channel
+        // I'm the client but I'm connected in another channel
         if(c.user.id == actualClientId && channelId != c.voice.connections.toJSON()[0].channel)
           return false;
 
-        //I'm not the client and I'm connected to the user channel
+        // I'm not the client and I'm connected to the user channel
         if(channelId == c.voice.connections.toJSON()[0].channel)
           return false;
       }
