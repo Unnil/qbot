@@ -116,7 +116,8 @@ const AsyncLock = require('async-lock');
         processMessage(client, message);   
 
       }, (err, ret) => {
-        console.error(err)
+        if(err)
+          console.error(err)
       });
       
     });
