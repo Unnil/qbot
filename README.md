@@ -1,23 +1,22 @@
 ![logo](https://repository-images.githubusercontent.com/186841818/8aa95700-7730-11e9-84be-e80f28520325)
 
 # 🤖 QBot (Discord Music Bot)
-> EvoBot is a Discord Music Bot built with discord.js & uses Command Handler from [discordjs.guide](https://discordjs.guide)
+> QBot is a Discord Music Bot built with discord.js & uses Command Handler from [discordjs.guide](https://discordjs.guide)
 
 ## Requirements
 
 1. Discord Bot Token **[Guide](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot)**
-2 **(Optional)** Soundcloud Client ID **[Guide](https://github.com/zackradisic/node-soundcloud-downloader#client-id)**
-3. Node.js v14.0.0 or newer
+2. Node.js v14.0.0 or newer
 
 ## 🚀 Getting Started
 
 ```sh
-git clone https://github.com/eritislami/evobot.git
-cd evobot
-npm install
+git clone git@github.com:Unnil/qbot.git
+cd qbot
+npm i
 ```
 
-After installation finishes follow configuration instructions then run `node index.js` to start the bot.
+After installation finishes follow configuration instructions then run `npm run start` to start the bot.
 
 ## ⚙️ Configuration
 
@@ -27,23 +26,18 @@ Copy or Rename `config.json.example` to `config.json` and fill out the values:
 
 ```json
 {
-  "TOKEN": "",
+  "TOKENS": [""],
+  "REDIS_URL": "",
   "SOUNDCLOUD_CLIENT_ID": "",
-  "MAX_PLAYLIST_SIZE": 10,
+  "SPOTIFY_CLIENT_ID": "",   
+  "SPOTIFY_SECRET_ID": "",
+  "MAX_PLAYLIST_SIZE": 50,
   "PREFIX": "/",
   "PRUNING": false,
   "LOCALE": "en",
-  "DEFAULT_VOLUME": 100,
+  "DEFAULT_VOLUME": 10,
   "STAY_TIME": 30
 }
-```
-
-## 🐬 Docker Configuration
-
-For those who would prefer to use our [Docker container](https://hub.docker.com/repository/docker/eritislami/evobot), you may provide values from `config.json` as environment variables.
-
-```shell
-docker run -e "TOKEN=<discord-token>" -e "YOUTUBE_API_KEY=<youtube-key>" eritislami/evobot
 ```
 
 ## 📝 Features & Commands
@@ -58,9 +52,9 @@ docker run -e "TOKEN=<discord-token>" -e "YOUTUBE_API_KEY=<youtube-key>" eritisl
 
 `/play under the bridge red hot chili peppers`
 
-* 🎶 Play music from Soundcloud via url
+* 🎶 Play music from Spotify via url
 
-`/play https://soundcloud.com/blackhorsebrigade/pearl-jam-alive`
+`/play https://open.spotify.com/playlist/37i9dQZF1EIY5o2jtmm5PI?si=f66aba8d9ff74c11`
 
 * 🔎 Search and select music to play
 
@@ -98,37 +92,11 @@ Examples: `1` or `1,2,3`
 * Command Handler from [discordjs.guide](https://discordjs.guide/)
 * Media Controls via Reactions
 
-![reactions](https://i.imgur.com/9S7Omf9.png)
-
 ## 🌎 Locales
 
 Currently available locales are:
 - English (en)
-- Arabic (ar)
-- Brazilian Portuguese (pt_br)
-- Dutch (nl)
-- French (fr)
-- German (de)
-- Greek (el)
-- Indonesian (id)
-- Italian (it)
-- Japanese (ja)
-- Korean (ko)
-- Minionese (mi)
-- Persian (fa)
-- Polish (pl)
-- Russian (ru)
-- Simplified Chinese (zh_cn)
-- Singaporean Mandarin (zh_sg)
 - Spanish (es)
-- Swedish (sv)
-- Traditional Chinese (zh_tw)
-- Thai (th)
-- Turkish (tr)
-- Ukrainian (uk)
-- Vietnamese (vi)
-- Check [Contributing](#-contributing) if you wish to help add more languages!
-- For languages please use [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) two letter format
 
 ## 🤝 Contributing
 
@@ -143,3 +111,4 @@ Currently available locales are:
 ## 📝 Credits
 
 [@iCrawl](https://github.com/iCrawl) For the queue system used in this application which was adapted from [@iCrawl/discord-music-bot](https://github.com/iCrawl/discord-music-bot)
+[@eritislami](https://github.com/eritislami) For generate the first version
