@@ -116,15 +116,16 @@ const AsyncLock = require('async-lock');
 
         const channelId = myChannel.id
 
-        const commandArguments = getCommandArguments(client, message)
-        if(commandArguments){
-          const commandName = commandArguments.shift().toLowerCase();
-          if(commandName === "play" && BotsAreFull() && i === 0)
-            return message.reply(i18n.__("common.unavailableBots")).catch(console.error); 
-        }
-
-        if(!CanAttendMessages(client.user.id, channelId))
+        if(!CanAttendMessages(client.user.id, channelId)){
+          //TODO: asegurarse que no estes en un cannal con un bot
+          const commandArguments = getCommandArguments(client, message)
+          if(commandArguments){
+            const commandName = commandArguments.shift().toLowerCase();
+            if(commandName === "play" && BotsAreFull() && i === 0)
+              return message.reply(i18n.__("common.unavailableBots")).catch(console.error); 
+          }
           return;
+        }
 
         const owner = await redisClient.get(message.id);
         if(owner)
