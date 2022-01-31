@@ -8,7 +8,8 @@ try {
   config = null;
 }
 
-exports.TOKEN = config ? config.TOKEN : process.env.TOKEN;
+exports.TOKENS = config ? config.TOKENS : process.env.TOKENS;
+exports.REDIS_URL = config ? config.REDIS_URL : process.env.REDIS_URL;
 exports.SOUNDCLOUD_CLIENT_ID = config ? config.SOUNDCLOUD_CLIENT_ID : process.env.SOUNDCLOUD_CLIENT_ID;
 exports.PREFIX = (config ? config.PREFIX : process.env.PREFIX) || "/";
 exports.MAX_PLAYLIST_SIZE = (config ? config.MAX_PLAYLIST_SIZE : parseInt(process.env.MAX_PLAYLIST_SIZE)) || 10;
@@ -24,7 +25,7 @@ exports.LOCALE = (config ? config.LOCALE : process.env.LOCALE) || "en";
 const Spotify = require('node-spotify-api');
 SPOTIFY_CLIENT_ID = config ? config.SPOTIFY_CLIENT_ID : process.env.SPOTIFY_CLIENT_ID;
 SPOTIFY_SECRET_ID = config ? config.SPOTIFY_SECRET_ID : process.env.SPOTIFY_SECRET_ID;
- exports.Spotify = new Spotify({
+exports.Spotify = new Spotify({
   id: SPOTIFY_CLIENT_ID,
   secret: SPOTIFY_SECRET_ID
 });

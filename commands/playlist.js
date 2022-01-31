@@ -147,16 +147,5 @@ module.exports = {
         return message.channel.send(i18n.__mf("play.cantJoinChannel", { error: error })).catch(console.error);
       }
     }
-  },
-  convert(second) {
-    const a = second.split(':');
-    let rre
-    if (a.length == 2) {
-      rre = (+a[0]) * 60 + (+a[1])
-    } else {
-      rre = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2])
-    }
-
-    return rre;
   }
 };

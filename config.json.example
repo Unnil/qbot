@@ -1,5 +1,5 @@
 {
-  "TOKEN": "",
+  "TOKENS": [""],
   "SOUNDCLOUD_CLIENT_ID": "",
   "SPOTIFY_CLIENT_ID": "",
   "SPOTIFY_SECRET_ID": "",
@@ -8,5 +8,6 @@
   "PRUNING": false,
   "LOCALE": "en",
   "STAY_TIME": 30,
-  "DEFAULT_VOLUME": 100
+  "DEFAULT_VOLUME": 100,
+  "REDIS_URL": ""
 }
