@@ -8,7 +8,7 @@ try {
   config = null;
 }
 
-exports.TOKENS = config ? config.TOKENS : process.env.TOKENS;
+exports.TOKENS = config ? config.TOKENS.split(",") : process.env.TOKENS.split(",");
 exports.REDIS_URL = config ? config.REDIS_URL : process.env.REDIS_URL;
 exports.SOUNDCLOUD_CLIENT_ID = config ? config.SOUNDCLOUD_CLIENT_ID : process.env.SOUNDCLOUD_CLIENT_ID;
 exports.PREFIX = (config ? config.PREFIX : process.env.PREFIX) || "/";
