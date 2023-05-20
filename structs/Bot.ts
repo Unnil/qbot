@@ -17,6 +17,7 @@ import { config } from "../utils/config";
 import { i18n } from "../utils/i18n";
 import { MissingPermissionsException } from "../utils/MissingPermissionsException";
 import { MusicQueue } from "./MusicQueue";
+import { botHandler } from "..";
 
 export class Bot {
   public readonly prefix = config.PREFIX;
@@ -26,13 +27,14 @@ export class Bot {
   public cooldowns = new Collection<string, Collection<Snowflake, number>>();
   public queues = new Collection<Snowflake, MusicQueue>();
 
-  public constructor(public readonly client: Client) {
-    this.client.login(config.TOKEN);
+  public constructor(public readonly client: Client, public readonly token:string, public readonly botId:number) {
+    this.client.login(token);
+    this.botId = botId;
 
     this.client.on("ready", () => {
       console.log(`${this.client.user!.username} ready!`);
 
-      this.registerSlashCommands();
+      this.registerSlashCommands(token);
     });
 
     this.client.on("warn", (info) => console.log(info));
@@ -41,8 +43,8 @@ export class Bot {
     this.onInteractionCreate();
   }
 
-  private async registerSlashCommands() {
-    const rest = new REST({ version: "9" }).setToken(config.TOKEN);
+  private async registerSlashCommands(token:string) {
+    const rest = new REST({ version: "9" }).setToken(token);
 
     const commandFiles = readdirSync(join(__dirname, "..", "commands")).filter((file) => !file.endsWith(".map"));
 
@@ -59,6 +61,15 @@ export class Bot {
   private async onInteractionCreate() {
     this.client.on(Events.InteractionCreate, async (interaction: Interaction): Promise<any> => {
       if (!interaction.isChatInputCommand()) return;
+      let imBusy = botHandler.usedBots[this.botId];
+
+      console.log("quien soy", this.botId, imBusy);
+
+      //We dont answer unless we are on the same channel
+      if(imBusy){
+        const { channel } = interaction.guild!.members.cache.get(interaction.user.id)!.voice;
+        if(channel != interaction.guild?.members.me?.voice.channel) return;
+      }
 
       const command = this.slashCommandsMap.get(interaction.commandName);
 

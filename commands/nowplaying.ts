@@ -1,12 +1,13 @@
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { splitBar } from "string-progressbar";
-import { bot } from "../index";
 import { i18n } from "../utils/i18n";
+import { botHandler } from "..";
 
 export default {
   data: new SlashCommandBuilder().setName("nowplaying").setDescription(i18n.__("nowplaying.description")),
   cooldown: 10,
   execute(interaction: ChatInputCommandInteraction) {
+    const bot = botHandler.getFreeBot()
     const queue = bot.queues.get(interaction.guild!.id);
 
     if (!queue || !queue.songs.length)

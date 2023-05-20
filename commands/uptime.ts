@@ -1,10 +1,11 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { bot } from "../index";
 import { i18n } from "../utils/i18n";
+import { botHandler } from "..";
 
 export default {
   data: new SlashCommandBuilder().setName("uptime").setDescription(i18n.__("uptime.description")),
   execute(interaction: ChatInputCommandInteraction) {
+    const bot = botHandler.getFreeBot()
     let seconds = Math.floor(bot.client.uptime! / 1000);
     let minutes = Math.floor(seconds / 60);
     let hours = Math.floor(minutes / 60);

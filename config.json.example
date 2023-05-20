@@ -1,9 +1,11 @@
 {
   "TOKEN": "",
-  "MAX_PLAYLIST_SIZE": 10,
+  "TOKENS": [""],
+  "MAX_PLAYLIST_SIZE": 1000,
   "PREFIX": "/",
-  "PRUNING": false,
+  "PRUNING": true,
   "LOCALE": "en",
-  "STAY_TIME": 30,
-  "DEFAULT_VOLUME": 100
+  "STAY_TIME": 20,
+  "DEFAULT_VOLUME": 10,
+  "REDIS_URL": ""
 }

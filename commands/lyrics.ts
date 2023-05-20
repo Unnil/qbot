@@ -2,11 +2,12 @@ import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "
 import { i18n } from "../utils/i18n";
 // @ts-ignore
 import lyricsFinder from "lyrics-finder";
-import { bot } from "../index";
+import { botHandler } from "..";
 
 export default {
   data: new SlashCommandBuilder().setName("lyrics").setDescription(i18n.__("lyrics.description")),
   async execute(interaction: ChatInputCommandInteraction) {
+    const bot = botHandler.getFreeBot()
     const queue = bot.queues.get(interaction.guild!.id);
 
     if (!queue || !queue.songs.length) return interaction.reply(i18n.__("lyrics.errorNotQueue")).catch(console.error);

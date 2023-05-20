@@ -6,8 +6,8 @@ import {
   StringSelectMenuInteraction
 } from "discord.js";
 import youtube, { Video } from "youtube-sr";
-import { bot } from "..";
 import { i18n } from "../utils/i18n";
+import { botHandler } from "..";
 
 export default {
   data: new SlashCommandBuilder()
@@ -68,6 +68,7 @@ export default {
         if (!(selectInteraction instanceof StringSelectMenuInteraction)) return;
 
         selectInteraction.update({ content: "⏳ Loading the selected songs...", components: [] });
+        const bot = botHandler.getFreeBot()
 
         bot.slashCommandsMap
           .get("play")!

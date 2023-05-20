@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { bot } from "../index";
 import { i18n } from "../utils/i18n";
 import { canModifyQueue } from "../utils/queue";
+import { botHandler } from "..";
 
 export default {
   data: new SlashCommandBuilder()
@@ -13,7 +13,7 @@ export default {
   execute(interaction: ChatInputCommandInteraction) {
     const playlistSlotArg = interaction.options.getInteger("number");
     const guildMemer = interaction.guild!.members.cache.get(interaction.user.id);
-
+    const bot = botHandler.getFreeBot()
     if (!playlistSlotArg || isNaN(playlistSlotArg))
       return interaction
         .reply({

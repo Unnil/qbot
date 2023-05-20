@@ -1,8 +1,8 @@
 import move from "array-move";
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { bot } from "../index";
 import { i18n } from "../utils/i18n";
 import { canModifyQueue } from "../utils/queue";
+import { botHandler } from "..";
 
 export default {
   data: new SlashCommandBuilder()
@@ -19,6 +19,7 @@ export default {
     const movetoArg = interaction.options.getInteger("moveto");
 
     const guildMemer = interaction.guild!.members.cache.get(interaction.user.id);
+    const bot = botHandler.getFreeBot()
     const queue = bot.queues.get(interaction.guild!.id);
 
     if (!queue) return interaction.reply(i18n.__("move.errorNotQueue")).catch(console.error);

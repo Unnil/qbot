@@ -1,8 +1,8 @@
 import { SlashCommandBuilder, CommandInteraction, ChatInputCommandInteraction } from "discord.js";
-import { bot } from "../index";
 import { Song } from "../structs/Song";
 import { i18n } from "../utils/i18n";
 import { canModifyQueue } from "../utils/queue";
+import { botHandler } from "..";
 
 const pattern = /^[0-9]{1,2}(\s*,\s*[0-9]{1,2})*$/;
 
@@ -16,7 +16,7 @@ export default {
   execute(interaction: ChatInputCommandInteraction) {
     const guildMemer = interaction.guild!.members.cache.get(interaction.user.id);
     const removeArgs = interaction.options.getString("slot");
-
+    const bot = botHandler.getFreeBot()
     const queue = bot.queues.get(interaction.guild!.id);
 
     if (!queue)

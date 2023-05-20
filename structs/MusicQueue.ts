@@ -13,12 +13,14 @@ import {
 } from "@discordjs/voice";
 import { CommandInteraction, Message, TextChannel, User } from "discord.js";
 import { promisify } from "node:util";
-import { bot } from "../index";
 import { QueueOptions } from "../interfaces/QueueOptions";
 import { config } from "../utils/config";
 import { i18n } from "../utils/i18n";
 import { canModifyQueue } from "../utils/queue";
 import { Song } from "./Song";
+import { botHandler } from "..";
+
+let bot = botHandler.botArray[0];
 
 const wait = promisify(setTimeout);
 

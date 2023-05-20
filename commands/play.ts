@@ -1,10 +1,11 @@
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice";
 import { ChatInputCommandInteraction, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
-import { bot } from "../index";
-import { MusicQueue } from "../structs/MusicQueue";
 import { Song } from "../structs/Song";
 import { i18n } from "../utils/i18n";
 import { playlistPattern } from "../utils/patterns";
+import { MusicQueue } from "../structs/MusicQueue";
+import { botHandler } from "..";
+
 
 export default {
   data: new SlashCommandBuilder()
@@ -28,6 +29,7 @@ export default {
     if (!channel)
       return interaction.reply({ content: i18n.__("play.errorNotChannel"), ephemeral: true }).catch(console.error);
 
+    const bot = botHandler.getFreeBot()
     const queue = bot.queues.get(interaction.guild!.id);
 
     if (queue && channel.id !== queue.connection.joinConfig.channelId)

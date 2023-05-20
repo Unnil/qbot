@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { bot } from "../index";
 import { i18n } from "../utils/i18n";
 import { canModifyQueue } from "../utils/queue";
+import { botHandler } from "..";
 
 export default {
   data: new SlashCommandBuilder()
@@ -9,6 +9,7 @@ export default {
     .setDescription(i18n.__("volume.description"))
     .addIntegerOption((option) => option.setName("volume").setDescription(i18n.__("volume.description"))),
   execute(interaction: ChatInputCommandInteraction) {
+    const bot = botHandler.getFreeBot()
     const queue = bot.queues.get(interaction.guild!.id);
     const guildMemer = interaction.guild!.members.cache.get(interaction.user.id);
     const volumeArg = interaction.options.getInteger("volume");

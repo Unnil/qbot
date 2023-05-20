@@ -1,11 +1,12 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { bot } from "../index";
 import { i18n } from "../utils/i18n";
 import { canModifyQueue } from "../utils/queue";
+import { botHandler } from "..";
 
 export default {
   data: new SlashCommandBuilder().setName("loop").setDescription(i18n.__("loop.description")),
   execute(interaction: ChatInputCommandInteraction) {
+    const bot = botHandler.getFreeBot()
     const queue = bot.queues.get(interaction.guild!.id);
 
     const guildMemer = interaction.guild!.members.cache.get(interaction.user.id);

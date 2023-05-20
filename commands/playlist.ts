@@ -6,11 +6,11 @@ import {
   SlashCommandBuilder,
   TextChannel
 } from "discord.js";
-import { bot } from "../index";
 import { MusicQueue } from "../structs/MusicQueue";
 import { Playlist } from "../structs/Playlist";
 import { Song } from "../structs/Song";
 import { i18n } from "../utils/i18n";
+import { botHandler } from "..";
 
 export default {
   data: new SlashCommandBuilder()
@@ -29,7 +29,7 @@ export default {
 
     const guildMemer = interaction.guild!.members.cache.get(interaction.user.id);
     const { channel } = guildMemer!.voice;
-
+    const bot = botHandler.getFreeBot()
     const queue = bot.queues.get(interaction.guild!.id);
 
     if (!channel)

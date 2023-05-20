@@ -8,15 +8,16 @@ import {
   TextChannel,
   User
 } from "discord.js";
-import { bot } from "../index";
 import { Song } from "../structs/Song";
 import { i18n } from "../utils/i18n";
+import { botHandler } from "..";
 
 export default {
   data: new SlashCommandBuilder().setName("queue").setDescription(i18n.__("queue.description")),
   cooldown: 5,
   permissions: [PermissionsBitField.Flags.AddReactions, PermissionsBitField.Flags.ManageMessages],
   async execute(interaction: ChatInputCommandInteraction) {
+    const bot = botHandler.getFreeBot()
     const queue = bot.queues.get(interaction.guild!.id);
     if (!queue || !queue.songs.length) return interaction.reply({ content: i18n.__("queue.errorNotQueue") });
 
