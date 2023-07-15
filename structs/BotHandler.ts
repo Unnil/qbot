@@ -29,6 +29,7 @@ export class BotHandler {
 
     public getFreeBot(){
         let freeBotIndex = this.usedBots.findIndex(used => {return used==false});
+        console.log("pidieron bot libre:", freeBotIndex, "pero, esta libre?:", this.botArray[freeBotIndex])
         return this.botArray[freeBotIndex];
     }
 }
